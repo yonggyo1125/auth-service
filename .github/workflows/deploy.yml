@@ -1,4 +1,4 @@
-name: production
+name: Deploy to Amazon EC2
 on: push
 
 env:
@@ -20,13 +20,13 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
-          distribution: temurin
+          distribution: openjdk
           java-version: 21
           cache: gradle
       - name: Build, unit tests and integration tests
         run: |
           chmod +x gradlew
-          ./gradlew bootJar
+          ./gradlew build
   package: # 도커 이미지 생성 및 github 이미지 저장소로 올리기
     name: Package and Publish
     if: ${{ github.ref == 'refs/heads/main' }}
@@ -42,7 +42,7 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
-          distribution: temurin
+          distribution: openjdk
           java-version: 21
           cache: gradle
       - name: Build container image
