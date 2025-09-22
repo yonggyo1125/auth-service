@@ -20,7 +20,7 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
-          distribution: openjdk
+          distribution: temurin
           java-version: 21
           cache: gradle
       - name: Build, unit tests and integration tests
@@ -42,7 +42,7 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
-          distribution: openjdk
+          distribution: temurin
           java-version: 21
           cache: gradle
       - name: Build container image
