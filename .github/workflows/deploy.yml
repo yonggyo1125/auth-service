@@ -7,35 +7,15 @@ env:
   VERSION: latest
 
 jobs:
-  build: # 소스 코드 이미지 빌드 처리
+  Deploy:
     name: Build and Test
     if: ${{ github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      security-events: write
-    steps:
-      - name: Checkout source code
-        uses: actions/checkout@v4
-      - name: Set up JDK
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: 21
-          cache: gradle
-      - name: Build, unit tests and integration tests
-        run: |
-          chmod +x gradlew
-          ./gradlew build
-  package: # 도커 이미지 생성 및 github 이미지 저장소로 올리기
-    name: Package and Publish
-    if: ${{ github.ref == 'refs/heads/main' }}
-    needs: [ build ]
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
       packages: write
       security-events: write
+    environment: deploy
     steps:
       - name: Checkout source code
         uses: actions/checkout@v4
@@ -58,16 +38,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Publish container image
         run: docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
-  deploy:
-    name: Deploy to EC2
-    if: ${{ github.ref == 'refs/heads/main' }}
-    needs: [ package ]
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      security-events: write
-    environment: deploy
-    steps:
+
       - name: executing remote ssh commands
         uses: appleboy/ssh-action@v0.1.6
         with:
