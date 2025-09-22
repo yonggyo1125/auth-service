@@ -60,6 +60,7 @@ jobs:
   deploy:
     name: Deploy to EC2
     runs-on: ubuntu-latest
+    environment: deploy
     steps:
       - name: executing remote ssh commands
         uses: appleboy/ssh-action@v0.1.6
