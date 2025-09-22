@@ -9,6 +9,7 @@ env:
 jobs:
   build: # 소스 코드 이미지 빌드 처리
     name: Build and Test
+    if: ${{ github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -59,7 +60,12 @@ jobs:
         run: docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
   deploy:
     name: Deploy to EC2
+    if: ${{ github.ref == 'refs/heads/main' }}
+    needs: [ package ]
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
     environment: deploy
     steps:
       - name: executing remote ssh commands
