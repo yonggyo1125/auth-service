@@ -3,7 +3,6 @@ server:
 
 eureka:
   client:
-    hostname: "localhost"
     register-with-eureka: true
     fetch-registry: true
     serviceUrl:
